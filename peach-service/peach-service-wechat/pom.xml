@@ -9,5 +9,5 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>peach-alipay</artifactId>
+    <artifactId>peach-service-wechat</artifactId>
 </project>

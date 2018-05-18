@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: peach-config
+---
+server:
+  port: 30001
+  address: 127.0.0.1
+---
+management:
+  security:
+    enabled: true
+    roles: SUPERUSER
+  context-path: /peach-config
+---
+security:
+  user:
+    name: password
+    password: username
+---
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: file:\E:\

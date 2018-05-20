@@ -3,23 +3,26 @@ spring:
     name: peach-config
 ---
 server:
-  port: 30001
   address: 127.0.0.1
+  port: 30001
+  servlet:
+    context-path: /peach-config
 ---
 management:
-  security:
-    enabled: true
-    roles: SUPERUSER
-  context-path: /peach-config
+  server:
+    servlet:
+      context-path: /management
+    port: 30002
 ---
-security:
-  user:
-    name: password
-    password: username
+spring:
+  security:
+    user:
+      name: hello
+      password: world
 ---
 spring:
   cloud:
     config:
       server:
         git:
-          uri: file:\E:\
+          uri: file:\E:\workspace\workspace_github\peach\peach-config\src\main\resources\config

@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: peach-gateway
+---
+server:
+  address: 127.0.0.1
+  port: 30003
+---
+spring:
+  cloud:
+    config:
+      uri: xxx

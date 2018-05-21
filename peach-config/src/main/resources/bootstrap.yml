@@ -13,6 +13,9 @@ management:
     servlet:
       context-path: /management
     port: 30002
+  endpoints:
+    web:
+      base-path: /actuator
 ---
 spring:
   security:

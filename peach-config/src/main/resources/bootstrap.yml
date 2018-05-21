@@ -28,4 +28,4 @@ spring:
     config:
       server:
         git:
-          uri: file:\E:\workspace\workspace_github\peach\peach-config\src\main\resources\config
+          uri: file:\E:\workspace\workspace_github\peach-config

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: peach-gateway
+    name: peach-registry
   profiles:
     active: dev
 ---

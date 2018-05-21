@@ -1,6 +1,5 @@
 # Peach
-Solution for third-party services.
-e.g.
+Solution for third-party services
 
 - [Alipay](https://open.alipay.com/platform/home.htm)
 - [Wechat](https://pay.weixin.qq.com/index.php)

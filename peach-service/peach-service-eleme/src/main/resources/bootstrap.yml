@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: peach-service-eleme
+  profiles:
+    active: dev
+---
+spring:
+  cloud:
+    config:
+      uri: http://127.0.0.1:30001/peach-config
+      username: hello
+      password: world

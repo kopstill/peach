@@ -1,13 +1,13 @@
-package com.kopever.peach.gateway;
+package com.kopever.peach.service.eleme;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GatewayApplication {
+public class ElemeApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GatewayApplication.class, args);
+        SpringApplication.run(ElemeApplication.class, args);
     }
 
 }

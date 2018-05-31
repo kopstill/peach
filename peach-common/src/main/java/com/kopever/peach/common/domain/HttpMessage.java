@@ -7,7 +7,9 @@ import lombok.Getter;
  */
 public enum HttpMessage {
 
-    SUCCESS(0, "Success");
+    SUCCESS(0, "Success"),
+    EXCEPTION(-1, "Exception"),
+    ;
 
     HttpMessage(int code, String message) {
         this.code = code;

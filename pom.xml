@@ -21,6 +21,8 @@
         <skipTests>true</skipTests>
         <spring-boot-dependencies.version>2.0.2.RELEASE</spring-boot-dependencies.version>
         <spring-cloud-dependencies.version>Finchley.RC1</spring-cloud-dependencies.version>
+        <peach-internal.version>1.0-SNAPSHOT</peach-internal.version>
+        <lombok.version>1.16.22</lombok.version>
     </properties>
 
     <modules>
@@ -29,6 +31,7 @@
         <module>peach-registry</module>
         <module>peach-service</module>
         <module>peach-test</module>
+        <module>peach-common</module>
     </modules>
 
     <repositories>
@@ -80,6 +83,16 @@
                 <version>${spring-cloud-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.kopever.peach</groupId>
+                <artifactId>peach-common</artifactId>
+                <version>${peach-internal.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -20,7 +20,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <skipTests>true</skipTests>
         <spring-boot-dependencies.version>2.0.2.RELEASE</spring-boot-dependencies.version>
-        <spring-cloud-dependencies.version>Finchley.RC1</spring-cloud-dependencies.version>
+        <spring-cloud-dependencies.version>Finchley.RC2</spring-cloud-dependencies.version>
         <peach-internal.version>1.0-SNAPSHOT</peach-internal.version>
         <lombok.version>1.16.22</lombok.version>
     </properties>

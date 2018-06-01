@@ -6,13 +6,14 @@ import com.kopever.peach.service.eleme.domain.vo.ElemeCouponResponseVO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 
 @RestController
 public class CouponController {
 
     @GetMapping("/coupon")
-    public HttpResponse coupon(ElemeCouponRequestVO requestVO) {
+    public HttpResponse coupon(@Valid ElemeCouponRequestVO requestVO) {
         System.out.println(requestVO.getCouponUrl());
         System.out.println(requestVO.getPhoneNumber());
 

@@ -23,6 +23,7 @@
         <spring-cloud-dependencies.version>Finchley.RC2</spring-cloud-dependencies.version>
         <peach-internal.version>1.0-SNAPSHOT</peach-internal.version>
         <lombok.version>1.16.22</lombok.version>
+        <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
     </properties>
 
     <modules>
@@ -93,6 +94,11 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax.servlet-api.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

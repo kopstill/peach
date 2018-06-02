@@ -18,4 +18,7 @@ public class ElemeCouponRequestVO {
     @NotBlank
     private String phoneNumber;
 
+    @NotBlank
+    private String secretKey;
+
 }

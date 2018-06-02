@@ -21,6 +21,11 @@ public class HttpResponse<T> {
         message = HttpMessage.SUCCESS.getMessage();
     }
 
+    public HttpResponse(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
     public HttpResponse(HttpMessage httpMessage) {
         code = httpMessage.getCode();
         message = httpMessage.getMessage();

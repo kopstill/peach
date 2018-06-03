@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kopever.peach.service.eleme.dao.ElemeCookieMapper">
+    <insert id="insert" parameterType="ElemeCookieDO">
+      insert into `peach`.`eleme_cookie` (
+        `receive_date`,
+        `remain_times`,
+        `eleme_key`,
+        `language`,
+        `name`,
+        `avatar`,
+        `city`,
+        `country`,
+        `headimgurl`,
+        `nickname`,
+        `openid`,
+        `privilege`,
+        `province`,
+        `sex`,
+        `unionid`
+      ) values (
+        #{receiveDate},
+        #{remainTimes},
+        #{elemeKey},
+        #{language},
+        #{name},
+        #{avatar},
+        #{city},
+        #{country},
+        #{headimgurl},
+        #{nickname},
+        #{openid},
+        #{privilege},
+        #{province},
+        #{sex},
+        #{unionid}
+      )
+    </insert>
+</mapper>

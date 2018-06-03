@@ -19,7 +19,7 @@ public class ElemeCookieVO {
     private String openid;
     private String[] privilege;
     private String province;
-    private String sex;
+    private Integer sex;
     private String unionid;
 
 }

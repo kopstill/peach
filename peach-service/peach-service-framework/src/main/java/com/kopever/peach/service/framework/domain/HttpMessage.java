@@ -1,4 +1,4 @@
-package com.kopever.peach.common.domain;
+package com.kopever.peach.service.framework.domain;
 
 import lombok.Getter;
 
@@ -9,6 +9,7 @@ public enum HttpMessage {
 
     SUCCESS(0, "Success"),
     EXCEPTION(-1, "Exception"),
+    FAILURE(1, "Failure"),
     ;
 
     HttpMessage(int code, String message) {

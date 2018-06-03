@@ -4,6 +4,6 @@ import com.kopever.peach.service.eleme.domain.vo.ElemeCookieVO;
 
 public interface CouponService {
 
-    void saveElemeCouponCookie(ElemeCookieVO elemeCookieVO);
+    int saveElemeCouponCookie(ElemeCookieVO elemeCookieVO);
 
 }

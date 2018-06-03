@@ -9,28 +9,24 @@ import java.net.URLDecoder;
 
 public class CookieUtil {
 
-    public static String extractCookie(String cookieHeader) throws UnsupportedEncodingException {
-        String decodedCookieHeader = URLDecoder.decode(cookieHeader, "UTF-8");
+    public static String extractCookie(String cookie) throws UnsupportedEncodingException {
+        String decodedCookie = URLDecoder.decode(cookie, "UTF-8");
 
-        if (decodedCookieHeader.startsWith("Cookie:") || decodedCookieHeader.startsWith("cookie:")) {
-            decodedCookieHeader.indexOf(":");
-            String cookieValue = decodedCookieHeader.substring(
-                    decodedCookieHeader.indexOf(":") + 1, decodedCookieHeader.length()
-            ).trim();
+        if (decodedCookie.startsWith("Cookie:") || decodedCookie.startsWith("cookie:")) {
+            String cookieValue = decodedCookie.substring(
+                    decodedCookie.indexOf(":") + 1, decodedCookie.length()).trim();
 
             return doExtractCookie(cookieValue);
-        } else if (decodedCookieHeader.startsWith("snsInfo")) {
-            return doExtractCookie(decodedCookieHeader);
+        } else {
+            return doExtractCookie(decodedCookie);
         }
-
-        return null;
     }
 
     private static String doExtractCookie(String cookieValue) {
         String[] cookies = cookieValue.split("[;]");
 
         for (String cookie : cookies) {
-            if (cookie.startsWith("snsInfo")) {
+            if (cookie.trim().startsWith("snsInfo")) {
                 return splitCookie(cookie);
             }
         }
@@ -43,12 +39,12 @@ public class CookieUtil {
         return split[1];
     }
 
-    public static ElemeCookieVO extractCookieModel(String cookieHeader) throws UnsupportedEncodingException {
-        return Jackson.fromJson(extractCookie(cookieHeader), ElemeCookieVO.class);
+    public static ElemeCookieVO extractCookieModel(String cookie) throws UnsupportedEncodingException {
+        return Jackson.fromJson(extractCookie(cookie), ElemeCookieVO.class);
     }
 
     public static boolean isCookieValid(ElemeCookieVO cookieVO) {
-        return !StringUtils.isAllBlank(cookieVO.getElemeKey(), cookieVO.getOpenid());
+        return !StringUtils.isAnyBlank(cookieVO.getElemeKey(), cookieVO.getOpenid());
     }
 
 }

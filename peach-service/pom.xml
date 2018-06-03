@@ -18,12 +18,17 @@
         <module>peach-service-union</module>
         <module>peach-service-meituan</module>
         <module>peach-service-eleme</module>
+        <module>peach-service-framework</module>
     </modules>
 
     <dependencies>
         <dependency>
             <groupId>com.kopever.peach</groupId>
             <artifactId>peach-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kopever.peach</groupId>
+            <artifactId>peach-service-framework</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -1,7 +1,5 @@
 package com.kopever.peach.service.eleme.web;
 
-import com.kopever.peach.common.domain.HttpMessage;
-import com.kopever.peach.common.domain.HttpResponse;
 import com.kopever.peach.common.util.Jackson;
 import com.kopever.peach.service.eleme.domain.HttpElemeMessage;
 import com.kopever.peach.service.eleme.domain.vo.ElemeCookieVO;
@@ -9,6 +7,8 @@ import com.kopever.peach.service.eleme.domain.vo.ElemeCouponRequestVO;
 import com.kopever.peach.service.eleme.domain.vo.ElemeCouponResponseVO;
 import com.kopever.peach.service.eleme.service.CouponService;
 import com.kopever.peach.service.eleme.util.CookieUtil;
+import com.kopever.peach.service.framework.domain.HttpMessage;
+import com.kopever.peach.service.framework.domain.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,15 +31,19 @@ public class CouponController {
     }
 
     @PostMapping("/coupon/cookie")
-    public HttpResponse devoteCookie(@RequestParam("cookie_header") String cookieHeader) {
-        logger.info("CouponController.devoteCookie.cookieHeader -> {}", cookieHeader);
+    public HttpResponse devoteCookie(@RequestParam("cookie") String cookie) {
+        logger.info("CouponController.devoteCookie.cookie -> {}", cookie);
 
         try {
-            ElemeCookieVO cookieVO = CookieUtil.extractCookieModel(cookieHeader);
-            logger.info("CouponController.devoteCookie.cookie -> {}", Jackson.toJson(cookieVO));
+            ElemeCookieVO cookieVO = CookieUtil.extractCookieModel(cookie);
 
             if (CookieUtil.isCookieValid(cookieVO)) {
-                couponService.saveElemeCouponCookie(cookieVO);
+                int result = couponService.saveElemeCouponCookie(cookieVO);
+
+                if (result != 1) {
+                    return new HttpResponse(HttpMessage.FAILURE);
+                }
+
                 return new HttpResponse();
             }
 

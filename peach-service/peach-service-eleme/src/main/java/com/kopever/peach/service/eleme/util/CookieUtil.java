@@ -1,6 +1,6 @@
 package com.kopever.peach.service.eleme.util;
 
-import com.kopever.peach.common.util.Jackson;
+import com.kopever.peach.common.Jackson;
 import com.kopever.peach.service.eleme.domain.vo.ElemeCookieVO;
 import org.apache.commons.lang3.StringUtils;
 

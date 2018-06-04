@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kopever.peach.service.eleme.dao.ElemeCookieMapper">
     <insert id="insert" parameterType="ElemeCookieDO">
-      insert into `peach`.`eleme_cookie` (
+        insert into `peach`.`eleme_cookie` (
         `receive_date`,
         `remain_times`,
         `eleme_key`,
@@ -19,8 +19,9 @@
         `privilege`,
         `province`,
         `sex`,
-        `unionid`
-      ) values (
+        `unionid`,
+        `status`
+        ) values (
         #{receiveDate},
         #{remainTimes},
         #{elemeKey},
@@ -35,7 +36,8 @@
         #{privilege},
         #{province},
         #{sex},
-        #{unionid}
-      )
+        #{unionid},
+        #{status}
+        )
     </insert>
 </mapper>

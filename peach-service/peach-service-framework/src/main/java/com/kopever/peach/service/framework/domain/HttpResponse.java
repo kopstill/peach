@@ -17,8 +17,8 @@ public class HttpResponse<T> {
     private T result;
 
     public HttpResponse() {
-        code = HttpMessage.SUCCESS.getCode();
-        message = HttpMessage.SUCCESS.getMessage();
+        this.code = HttpMessage.SUCCESS.getCode();
+        this.message = HttpMessage.SUCCESS.getMessage();
     }
 
     public HttpResponse(int code, String message) {
@@ -27,8 +27,15 @@ public class HttpResponse<T> {
     }
 
     public HttpResponse(HttpMessage httpMessage) {
-        code = httpMessage.getCode();
-        message = httpMessage.getMessage();
+        this.code = httpMessage.getCode();
+        this.message = httpMessage.getMessage();
+    }
+
+    public HttpResponse<T> setCodeMessage(int code, String message) {
+        this.code = code;
+        this.message = message;
+
+        return this;
     }
 
 }

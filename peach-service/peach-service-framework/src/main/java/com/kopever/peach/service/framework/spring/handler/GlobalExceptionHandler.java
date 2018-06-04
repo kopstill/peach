@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
             }
         }
 
-        return new HttpResponse(HttpMessage.EXCEPTION).setResult(messages);
+        return new HttpResponse<List>(HttpMessage.EXCEPTION).setResult(messages);
     }
 
 }

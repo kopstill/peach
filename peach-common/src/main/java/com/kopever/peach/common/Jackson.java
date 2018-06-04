@@ -1,4 +1,4 @@
-package com.kopever.peach.common.util;
+package com.kopever.peach.common;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,7 +12,7 @@ public class Jackson {
     public static String toJson(Object object) {
         if (object != null) {
             StringWriter writer = new StringWriter();
-            ObjectMapper mapper = JacksonMapperInstance.INSTANCE.getInstance();
+            ObjectMapper mapper = JacksonInstance.INSTANCE.getInstance();
             try {
                 mapper.writeValue(writer, object);
                 return writer.toString();
@@ -26,7 +26,7 @@ public class Jackson {
 
     public static <T> T fromJson(String json, Class<T> clazz) {
         if (json != null) {
-            ObjectMapper mapper = JacksonMapperInstance.INSTANCE.getInstance();
+            ObjectMapper mapper = JacksonInstance.INSTANCE.getInstance();
             try {
                 return mapper.readValue(json, clazz);
             } catch (IOException e) {
@@ -39,7 +39,7 @@ public class Jackson {
 
     public static <T> T convert(Object object, Class<T> clazz) {
         if (object != null) {
-            ObjectMapper mapper = JacksonMapperInstance.INSTANCE.getInstance();
+            ObjectMapper mapper = JacksonInstance.INSTANCE.getInstance();
             return mapper.convertValue(object, clazz);
         }
 
@@ -48,13 +48,13 @@ public class Jackson {
 
 }
 
-enum JacksonMapperInstance {
+enum JacksonInstance {
 
     INSTANCE;
 
     private ObjectMapper mapper;
 
-    JacksonMapperInstance() {
+    JacksonInstance() {
         mapper = new ObjectMapper();
         mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

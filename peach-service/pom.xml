@@ -19,6 +19,7 @@
         <module>peach-service-meituan</module>
         <module>peach-service-eleme</module>
         <module>peach-service-framework</module>
+        <module>peach-service-user</module>
     </modules>
 
     <dependencies>
@@ -29,6 +30,10 @@
         <dependency>
             <groupId>com.kopever.peach</groupId>
             <artifactId>peach-service-framework</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dozermapper</groupId>
+            <artifactId>dozer-core</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -1,8 +1,9 @@
 package com.kopever.peach.service.eleme.service.impl;
 
-import com.kopever.peach.common.util.Jackson;
+import com.kopever.peach.common.Dozer;
 import com.kopever.peach.service.eleme.dao.ElemeCookieMapper;
 import com.kopever.peach.service.eleme.domain.data.ElemeCookieDO;
+import com.kopever.peach.service.eleme.domain.data.ElemeEnum;
 import com.kopever.peach.service.eleme.domain.vo.ElemeCookieVO;
 import com.kopever.peach.service.eleme.service.CouponService;
 import org.apache.commons.lang3.StringUtils;
@@ -24,10 +25,11 @@ public class CouponServiceImpl implements CouponService {
         String privilege = StringUtils.join(cookieVO.getPrivilege(), ',');
         cookieVO.setPrivilege(null);
 
-        ElemeCookieDO cookieDO = Jackson.convert(cookieVO, ElemeCookieDO.class);
+        ElemeCookieDO cookieDO = Dozer.map(cookieVO, ElemeCookieDO.class);
         cookieDO.setReceiveDate(new Date(System.currentTimeMillis()));
         cookieDO.setRemainTimes(5);
         cookieDO.setPrivilege(privilege);
+        cookieDO.setStatus(ElemeEnum.ELEME_COOKIE_STATUS_ENABLED.getValue());
 
         return elemeCookieMapper.insert(cookieDO);
     }

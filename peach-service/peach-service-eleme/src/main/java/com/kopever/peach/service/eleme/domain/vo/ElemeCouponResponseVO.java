@@ -14,7 +14,7 @@ public class ElemeCouponResponseVO {
 
     private String nickname;
 
-    private String phoneNumber;
+    private String mobileNumber;
 
     private BigDecimal amount;
 

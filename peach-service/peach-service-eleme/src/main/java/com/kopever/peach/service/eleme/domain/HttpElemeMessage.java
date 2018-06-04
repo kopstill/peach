@@ -4,7 +4,8 @@ import lombok.Getter;
 
 public enum HttpElemeMessage {
 
-    DEVOTE_COOKIE_FAILED(10600, "Cookie贡献失败，请检查Cookie格式"),
+    DEVOTE_COOKIE_FAILED(10601, "Cookie贡献失败，请检查Cookie格式"),
+    INVALID_SECRET_KEY(10602, "用户密钥错误"),
     ;
 
     HttpElemeMessage(int code, String message) {

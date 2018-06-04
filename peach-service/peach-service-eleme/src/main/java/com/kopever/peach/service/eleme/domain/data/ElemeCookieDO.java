@@ -28,4 +28,6 @@ public class ElemeCookieDO extends BaseDO {
     private Integer sex;
     private String unionid;
 
+    private Integer status;
+
 }

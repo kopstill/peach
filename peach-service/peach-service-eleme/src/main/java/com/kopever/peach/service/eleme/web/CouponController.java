@@ -1,23 +1,26 @@
 package com.kopever.peach.service.eleme.web;
 
-import com.kopever.peach.common.util.Jackson;
+import com.kopever.peach.common.Dozer;
+import com.kopever.peach.common.Jackson;
+import com.kopever.peach.service.eleme.client.UserClient;
 import com.kopever.peach.service.eleme.domain.HttpElemeMessage;
 import com.kopever.peach.service.eleme.domain.vo.ElemeCookieVO;
 import com.kopever.peach.service.eleme.domain.vo.ElemeCouponRequestVO;
-import com.kopever.peach.service.eleme.domain.vo.ElemeCouponResponseVO;
 import com.kopever.peach.service.eleme.service.CouponService;
 import com.kopever.peach.service.eleme.util.CookieUtil;
 import com.kopever.peach.service.framework.domain.HttpMessage;
 import com.kopever.peach.service.framework.domain.HttpResponse;
+import com.kopever.peach.service.framework.exception.HttpResponseFailedException;
+import com.kopever.peach.service.framework.exception.HttpResponseNullException;
+import com.kopever.peach.service.framework.util.ResponseUtil;
+import com.kopever.peach.service.user.domain.vo.PeachUserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
 
 @RestController
 public class CouponController {
@@ -26,8 +29,11 @@ public class CouponController {
 
     private final CouponService couponService;
 
-    public CouponController(CouponService couponService) {
+    private final UserClient userClient;
+
+    public CouponController(CouponService couponService, UserClient userClient) {
         this.couponService = couponService;
+        this.userClient = userClient;
     }
 
     @PostMapping("/coupon/cookie")
@@ -57,19 +63,28 @@ public class CouponController {
         }
     }
 
-    @GetMapping("/coupon/lucky")
+    @PostMapping("/coupon/lucky")
     public HttpResponse getLuckyCoupon(@Valid ElemeCouponRequestVO requestVO) {
-        System.out.println(requestVO.getCouponUrl());
-        System.out.println(requestVO.getPhoneNumber());
+        HttpResponse<PeachUserVO> userResponse = userClient.getUserByMobileNumber(requestVO.getMobileNumber());
+        logger.info("CouponController.getLuckyCoupon.userResponse -> {}", Jackson.toJson(userResponse));
 
-        HttpResponse response = new HttpResponse();
-        ElemeCouponResponseVO responseVO = new ElemeCouponResponseVO();
-        responseVO.setNickname("kopever");
-        responseVO.setPhoneNumber("18888888888");
-        responseVO.setAmount(new BigDecimal(5.6));
-        response.setResult(responseVO);
+        try {
+            if (ResponseUtil.isSuccess(userResponse)) {
+                PeachUserVO userVO = ResponseUtil.getResult(userResponse);
+                if (userVO.getSecretKey().equals(requestVO.getSecretKey())) {
+                    return new HttpResponse();
+                } else {
+                    return new HttpResponse().setCodeMessage(
+                            HttpElemeMessage.INVALID_SECRET_KEY.getCode(),
+                            HttpElemeMessage.INVALID_SECRET_KEY.getMessage());
+                }
+            }
 
-        return response;
+            return userResponse;
+        } catch (HttpResponseNullException | HttpResponseFailedException e) {
+            logger.error(e.getMessage());
+            return new HttpResponse(HttpMessage.EXCEPTION);
+        }
     }
 
 }

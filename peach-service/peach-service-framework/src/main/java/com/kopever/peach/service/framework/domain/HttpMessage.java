@@ -9,8 +9,7 @@ public enum HttpMessage {
 
     SUCCESS(0, "Success"),
     EXCEPTION(-1, "Exception"),
-    FAILURE(1, "Failure"),
-    ;
+    FAILURE(1, "Failure"),;
 
     HttpMessage(int code, String message) {
         this.code = code;

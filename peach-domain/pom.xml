@@ -9,16 +9,19 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>peach-test</artifactId>
+    <artifactId>peach-domain</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>peach-domain-user</module>
+        <module>peach-domain-eleme</module>
+        <module>peach-domain-meituan</module>
+    </modules>
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.kopever.peach</groupId>
-            <artifactId>peach-common</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 </project>

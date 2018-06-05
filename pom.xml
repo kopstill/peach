@@ -35,6 +35,7 @@
         <module>peach-registry</module>
         <module>peach-service</module>
         <module>peach-test</module>
+        <module>peach-framework</module>
         <module>peach-common</module>
         <module>peach-domain</module>
     </modules>
@@ -96,7 +97,7 @@
             </dependency>
             <dependency>
                 <groupId>com.kopever.peach</groupId>
-                <artifactId>peach-service-framework</artifactId>
+                <artifactId>peach-framework</artifactId>
                 <version>${peach-internal.version}</version>
             </dependency>
             <dependency>

@@ -1,4 +1,4 @@
-package com.kopever.peach.service.framework.spring.handler;
+package com.kopever.peach.service.framework.handler;
 
 import com.kopever.peach.common.util.HttpUtil;
 import com.kopever.peach.service.framework.domain.HttpMessage;

@@ -12,10 +12,14 @@ import java.math.BigDecimal;
 @Setter
 public class ElemeCouponResponseVO {
 
+    private Boolean isLucky;
+
     private String nickname;
 
     private String mobileNumber;
 
     private BigDecimal amount;
+
+    private String tips;
 
 }

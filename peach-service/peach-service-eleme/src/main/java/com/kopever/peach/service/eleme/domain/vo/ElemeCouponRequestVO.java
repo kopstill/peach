@@ -16,7 +16,7 @@ public class ElemeCouponRequestVO {
     private String couponUrl;
 
     @NotBlank
-    private String mobileNumber;
+    private String username;
 
     @NotBlank
     private String secretKey;

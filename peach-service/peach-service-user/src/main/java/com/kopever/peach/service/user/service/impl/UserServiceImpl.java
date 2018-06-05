@@ -16,9 +16,9 @@ public class UserServiceImpl implements UserService {
         this.userMapper = userMapper;
     }
 
-    public PeachUserDO getUserByMobileNumber(String mobileNumber) {
+    public PeachUserDO getUserByUsername(String username) {
         PeachUserDO userDO = new PeachUserDO();
-        userDO.setMobileNumber(mobileNumber);
+        userDO.setUsername(username);
 
         return userMapper.get(userDO);
     }

@@ -26,7 +26,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     public HttpResponse exceptionHandler(HttpServletRequest request, Exception exception) {
-        logger.error("GlobalExceptionHandler.exceptionHandler", exception);
         logger.error("Exception url -> {}", request.getRequestURL().toString());
 
         Map<String, String> parameters = HttpUtil.getParameters(request);
@@ -34,12 +33,13 @@ public class GlobalExceptionHandler {
             logger.error(entry.getKey() + ": {}", entry.getValue());
         }
 
+        logger.error("GlobalExceptionHandler.exceptionHandler", exception);
+
         return new HttpResponse(HttpMessage.EXCEPTION);
     }
 
     @ExceptionHandler(value = BindException.class)
     public HttpResponse<List> bindExceptionHandler(HttpServletRequest request, BindException bindException) {
-        logger.error("GlobalExceptionHandler.bindExceptionHandler", bindException);
         logger.error("Exception url -> {}", request.getRequestURL().toString());
 
         BindingResult bindingResult = bindException.getBindingResult();
@@ -54,6 +54,8 @@ public class GlobalExceptionHandler {
                 }
             }
         }
+
+        logger.error("GlobalExceptionHandler.bindExceptionHandler", bindException);
 
         return new HttpResponse<List>(HttpMessage.EXCEPTION).setResult(messages);
     }

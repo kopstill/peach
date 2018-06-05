@@ -23,12 +23,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/mobile_number/{mobile_number}")
-    public HttpResponse<PeachUserVO> getUserByMobileNumber(@PathVariable("mobile_number") String mobileNumber) {
+    @GetMapping("/{username}")
+    public HttpResponse<PeachUserVO> getUserByUsername(@PathVariable("username") String username) {
         HttpResponse<PeachUserVO> response = new HttpResponse<>();
 
         try {
-            PeachUserDO userDO = userService.getUserByMobileNumber(mobileNumber);
+            PeachUserDO userDO = userService.getUserByUsername(username);
             if (userDO != null) {
                 response.setResult(Dozer.map(userDO, PeachUserVO.class));
             } else {
@@ -37,7 +37,7 @@ public class UserController {
                         HttpUserMessage.USER_NOT_EXIST.getMessage());
             }
         } catch (Exception e) {
-            logger.error("UserController.getUserByMobileNumber.Exception", e);
+            logger.error("UserController.getUserByUsername.Exception", e);
             response.setCodeMessage(
                     HttpUserMessage.GET_USER_EXCEPTION.getCode(),
                     HttpUserMessage.GET_USER_EXCEPTION.getMessage());

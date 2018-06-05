@@ -4,14 +4,13 @@ import com.kopever.peach.service.framework.domain.data.BaseDO;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.math.BigInteger;
 
 @Getter
 @Setter
 public class ElemeCookieDO extends BaseDO {
 
-    private Date receiveDate;
-    private Integer remainTimes;
+    private BigInteger userId;
 
     private String elemeKey;
     private String language;
@@ -28,6 +27,7 @@ public class ElemeCookieDO extends BaseDO {
     private Integer sex;
     private String unionid;
 
+    private Integer cookieType;
     private Integer status;
 
 }

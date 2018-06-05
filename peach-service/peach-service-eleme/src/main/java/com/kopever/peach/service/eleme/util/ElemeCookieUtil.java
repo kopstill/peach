@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
-public class CookieUtil {
+public class ElemeCookieUtil {
 
     public static String extractCookie(String cookie) throws UnsupportedEncodingException {
         String decodedCookie = URLDecoder.decode(cookie, "UTF-8");

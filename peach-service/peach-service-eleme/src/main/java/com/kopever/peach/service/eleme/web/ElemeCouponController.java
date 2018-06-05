@@ -6,12 +6,10 @@ import com.kopever.peach.service.eleme.domain.HttpElemeMessage;
 import com.kopever.peach.service.eleme.domain.vo.ElemeCookieVO;
 import com.kopever.peach.service.eleme.domain.vo.ElemeCouponRequestVO;
 import com.kopever.peach.service.eleme.domain.vo.ElemeCouponResponseVO;
-import com.kopever.peach.service.eleme.service.CouponService;
-import com.kopever.peach.service.eleme.util.CookieUtil;
+import com.kopever.peach.service.eleme.service.ElemeCouponService;
+import com.kopever.peach.service.eleme.util.ElemeCookieUtil;
 import com.kopever.peach.service.framework.domain.HttpMessage;
 import com.kopever.peach.service.framework.domain.HttpResponse;
-import com.kopever.peach.service.framework.exception.HttpResponseFailedException;
-import com.kopever.peach.service.framework.exception.HttpResponseNullException;
 import com.kopever.peach.service.framework.util.ResponseUtil;
 import com.kopever.peach.service.user.domain.vo.PeachUserVO;
 import org.slf4j.Logger;
@@ -21,30 +19,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.math.BigInteger;
 
 @RestController
-public class CouponController {
+public class ElemeCouponController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CouponController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ElemeCouponController.class);
 
-    private final CouponService couponService;
+    private final ElemeCouponService couponService;
 
     private final UserClient userClient;
 
-    public CouponController(CouponService couponService, UserClient userClient) {
+    public ElemeCouponController(ElemeCouponService couponService, UserClient userClient) {
         this.couponService = couponService;
         this.userClient = userClient;
     }
 
     @PostMapping("/coupon/cookie")
-    public HttpResponse devoteCookie(@RequestParam("cookie") String cookie) {
+    public HttpResponse devoteCookie(@RequestParam("cookie") String cookie,
+                                     @RequestParam("is_primary") Boolean isPrimary,
+                                     @RequestParam("user_id") BigInteger userId) {
         logger.info("CouponController.devoteCookie.cookie -> {}", cookie);
 
         try {
-            ElemeCookieVO cookieVO = CookieUtil.extractCookieModel(cookie);
+            ElemeCookieVO cookieVO = ElemeCookieUtil.extractCookieModel(cookie);
 
-            if (CookieUtil.isCookieValid(cookieVO)) {
-                int result = couponService.saveElemeCouponCookie(cookieVO);
+            if (ElemeCookieUtil.isCookieValid(cookieVO)) {
+                int result = couponService.saveElemeCouponCookie(cookieVO, isPrimary, userId);
 
                 if (result != 1) {
                     return new HttpResponse(HttpMessage.FAILURE);
@@ -65,7 +66,7 @@ public class CouponController {
 
     @PostMapping("/coupon/lucky")
     public HttpResponse getLuckyCoupon(@Valid ElemeCouponRequestVO requestVO) {
-        HttpResponse<PeachUserVO> userResponse = userClient.getUserByMobileNumber(requestVO.getMobileNumber());
+        HttpResponse<PeachUserVO> userResponse = userClient.getUserByUsername(requestVO.getUsername());
         logger.info("CouponController.getLuckyCoupon.userResponse -> {}", Jackson.toJson(userResponse));
 
         try {
@@ -73,7 +74,8 @@ public class CouponController {
                 PeachUserVO userVO = ResponseUtil.getResult(userResponse);
 
                 if (userVO.getSecretKey().equals(requestVO.getSecretKey())) {
-                    ElemeCouponResponseVO responseVO = couponService.getElemeLuckyCoupon(requestVO, userVO);
+                    ElemeCouponResponseVO responseVO =
+                            couponService.getElemeLuckyCoupon(userVO.getId(), requestVO.getCouponUrl());
 
                     if (responseVO == null || !responseVO.getIsLucky()) {
                         return new HttpResponse<>(HttpMessage.FAILURE).setResult(responseVO);
@@ -88,8 +90,8 @@ public class CouponController {
             }
 
             return userResponse;
-        } catch (HttpResponseNullException | HttpResponseFailedException e) {
-            logger.error(e.getMessage());
+        } catch (Exception e) {
+            logger.error("CouponController.getLuckyCoupon.Exception", e);
             return new HttpResponse(HttpMessage.EXCEPTION);
         }
     }

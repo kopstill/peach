@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
         configuration = UserClientConfiguration.class)
 public interface UserClient {
 
-    @GetMapping("/mobile_number/{mobile_number}")
-    HttpResponse<PeachUserVO> getUserByMobileNumber(@PathVariable("mobile_number") String mobileNumber);
+    @GetMapping("/{username}")
+    HttpResponse<PeachUserVO> getUserByUsername(@PathVariable("username") String username);
 
 }
 
@@ -31,7 +31,7 @@ class UserClientFallbackFactory implements FallbackFactory<UserClient> {
 
     @Override
     public UserClient create(Throwable throwable) {
-        return mobileNumber -> {
+        return username -> {
             log.info("UserClientFallbackFactory.create.Throwable", throwable);
             return new HttpResponse<>(HttpMessage.EXCEPTION);
         };

@@ -5,8 +5,7 @@
 <mapper namespace="com.kopever.peach.service.eleme.dao.ElemeCookieMapper">
     <insert id="insert" parameterType="ElemeCookieDO">
         insert into `peach`.`eleme_cookie` (
-        `receive_date`,
-        `remain_times`,
+        `user_id`,
         `eleme_key`,
         `language`,
         `name`,
@@ -20,10 +19,10 @@
         `province`,
         `sex`,
         `unionid`,
+        `cookie_type`,
         `status`
         ) values (
-        #{receiveDate},
-        #{remainTimes},
+        #{userId},
         #{elemeKey},
         #{language},
         #{name},
@@ -37,6 +36,7 @@
         #{province},
         #{sex},
         #{unionid},
+        #{cookieType},
         #{status}
         )
     </insert>

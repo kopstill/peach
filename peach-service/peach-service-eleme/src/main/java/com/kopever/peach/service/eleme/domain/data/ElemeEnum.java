@@ -7,8 +7,8 @@ public enum ElemeEnum {
     ELEME_COOKIE_STATUS_ENABLED(1, "有效"),
     ELEME_COOKIE_STATUS_DISABLED(0, "无效"),
 
-    ELEME_COOKIE_TYPE_PRIMARY(1, "大号"),
-    ELEME_COOKIE_TYPE_SECONDARY(0, "小号"),
+    ELEME_COOKIE_PRIMARY(1, "大号"),
+    ELEME_COOKIE_SECONDARY(0, "小号"),
     ;
 
     ElemeEnum(int value, String comment) {

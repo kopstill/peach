@@ -42,16 +42,16 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
         cookieDO.setPrivilege(privilege);
         cookieDO.setUserId(userId);
         if (isPrimary) {
-            cookieDO.setCookieType(ElemeEnum.ELEME_COOKIE_TYPE_PRIMARY.getValue());
+            cookieDO.setIsPrimary(ElemeEnum.ELEME_COOKIE_PRIMARY.getValue());
         } else {
-            cookieDO.setCookieType(ElemeEnum.ELEME_COOKIE_TYPE_SECONDARY.getValue());
+            cookieDO.setIsPrimary(ElemeEnum.ELEME_COOKIE_SECONDARY.getValue());
         }
         cookieDO.setStatus(ElemeEnum.ELEME_COOKIE_STATUS_ENABLED.getValue());
 
         return cookieMapper.insert(cookieDO);
     }
 
-    private static final String ELEME_COUPON_URL = "https://h5.ele.me/restapi/marketing/promotion/weixin/oEGLvjh2WrbnkReLy7zex5KgTJ9A";
+    private static final String ELEME_COUPON_URL = "https://h5.ele.me/restapi/marketing/promotion/weixin/oEGLvjvJ7GgOLLmhjMLCu9R54qbA";
 
     @Override
     public ElemeCouponResponseVO getElemeLuckyCoupon(
@@ -71,7 +71,7 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
     private ElemeCouponResponseVO getElemeLuckyCoupon(BigInteger userId, String sn, String luckyNumber) throws IOException {
         ElemeCouponRequest couponRequest = new ElemeCouponRequest();
         couponRequest.setGroupSn(sn);
-        couponRequest.setSign("2d5ced3d20546b44fda6fa64f5b1044e");
+        couponRequest.setSign("2584934d5c9dcc8f2e260ceaab486992");
 
         String result = OkHttpUtil.post(ELEME_COUPON_URL, Jackson.toJson(couponRequest), OkHttpMediaType.TEXT);
         logger.info("ElemeCouponServiceImpl.getElemeLuckyCoupon.result -> {}", result);

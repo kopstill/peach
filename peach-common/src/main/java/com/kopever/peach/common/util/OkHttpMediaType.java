@@ -5,7 +5,9 @@ import okhttp3.MediaType;
 
 public enum OkHttpMediaType {
 
-    JSON(MediaType.parse("application/json; charset=utf-8"));
+    JSON(MediaType.parse("application/json; charset=utf-8")),
+    TEXT(MediaType.parse("text/plain; charset=utf-8")),
+    ;
 
     @Getter
     private MediaType mediaType;

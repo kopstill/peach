@@ -75,9 +75,9 @@ public class ElemeCouponController {
 
                 if (userVO.getSecretKey().equals(requestVO.getSecretKey())) {
                     ElemeCouponResponseVO responseVO =
-                            couponService.getElemeLuckyCoupon(userVO.getId(), requestVO.getCouponUrl());
+                            couponService.getElemeLuckyCoupon(userVO.getId(), userVO.getMobileNumber(), requestVO.getCouponUrl());
 
-                    if (responseVO == null || !responseVO.getIsLucky()) {
+                    if (responseVO == null || !responseVO.getIsSuccess()) {
                         return new HttpResponse<>(HttpMessage.FAILURE).setResult(responseVO);
                     }
 

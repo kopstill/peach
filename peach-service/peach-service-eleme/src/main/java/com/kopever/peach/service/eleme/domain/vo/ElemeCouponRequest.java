@@ -10,4 +10,7 @@ public class ElemeCouponRequest {
     private String groupSn;
     private String sign;
 
+    private String weixinAvatar;
+    private String weixinUsername;
+
 }

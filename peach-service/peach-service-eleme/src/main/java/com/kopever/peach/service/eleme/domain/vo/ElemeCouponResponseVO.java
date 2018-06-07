@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Setter
 public class ElemeCouponResponseVO {
 
-    private Boolean isLucky;
+    private Boolean isSuccess;
 
     private String nickname;
 

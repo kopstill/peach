@@ -17,7 +17,7 @@ public class ElemeCouponResponse {
 
     @Getter
     @Setter
-    private static class PromotionItem {
+    public static class PromotionItem {
 
         private Double amount;
         private String expireDate;
@@ -36,7 +36,7 @@ public class ElemeCouponResponse {
 
     @Getter
     @Setter
-    private static class PromotionRecord {
+    public static class PromotionRecord {
 
         private Double amount;
         private Integer createdAt;

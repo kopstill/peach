@@ -10,6 +10,6 @@ public interface ElemeCouponService {
 
     int saveElemeCouponCookie(ElemeCookieVO elemeCookieVO, Boolean isPrimary, BigInteger userId);
 
-    ElemeCouponResponseVO getElemeLuckyCoupon(BigInteger userId, String couponUrl) throws IOException;
+    ElemeCouponResponseVO getElemeLuckyCoupon(BigInteger userId, String mobileNumber, String couponUrl) throws IOException;
 
 }

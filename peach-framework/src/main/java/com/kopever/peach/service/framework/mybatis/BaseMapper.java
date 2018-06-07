@@ -8,6 +8,8 @@ public interface BaseMapper<T> {
 
     int insert(T clazz);
 
+    int insertBatch(T clazz);
+
     int delete(T clazz);
 
     int update(T clazz);

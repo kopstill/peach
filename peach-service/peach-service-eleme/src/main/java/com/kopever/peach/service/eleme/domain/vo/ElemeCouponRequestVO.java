@@ -12,6 +12,8 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class ElemeCouponRequestVO {
 
+    private String mobileNumber;
+
     @NotBlank
     private String couponUrl;
 

@@ -7,12 +7,8 @@ public enum ElemeEnum {
     ELEME_COOKIE_STATUS_ENABLED(1, "有效"),
     ELEME_COOKIE_STATUS_DISABLED(0, "无效"),
 
-    ELEME_COOKIE_PRIMARY(1, "大号"),
-    ELEME_COOKIE_SECONDARY(0, "小号"),
-
     ELEME_LUCKY_MAN(1, "人生赢家"),
-    ELEME_POOR_MAN(0, "重头再来"),
-    ;
+    ELEME_POOR_MAN(0, "重头再来"),;
 
     ElemeEnum(int value, String comment) {
         this.value = value;

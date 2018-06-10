@@ -8,8 +8,8 @@ import java.math.BigInteger;
 
 public interface ElemeCouponService {
 
-    int saveElemeCouponCookie(ElemeCookieVO elemeCookieVO, Boolean isPrimary, BigInteger userId);
+    int saveElemeCouponCookie(String origin, ElemeCookieVO elemeCookieVO, BigInteger userId);
 
-    ElemeCouponResponseVO getElemeLuckyCoupon(BigInteger userId, String mobileNumber, String couponUrl) throws IOException;
+    ElemeCouponResponseVO getElemeLuckyCoupon(String mobileNumber, String couponUrl) throws IOException;
 
 }

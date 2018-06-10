@@ -42,18 +42,14 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
     }
 
     @Override
-    public int saveElemeCouponCookie(ElemeCookieVO cookieVO, Boolean isPrimary, BigInteger userId) {
-        String privilege = StringUtils.join(cookieVO.getPrivilege(), ',');
+    public int saveElemeCouponCookie(String origin, ElemeCookieVO cookieVO, BigInteger userId) {
+        String privilege = StringUtils.join(cookieVO.getPrivilege(), ',').intern();
         cookieVO.setPrivilege(null);
 
         ElemeCookieDO cookieDO = Dozer.map(cookieVO, ElemeCookieDO.class);
         cookieDO.setPrivilege(privilege);
         cookieDO.setUserId(userId);
-        if (isPrimary) {
-            cookieDO.setIsPrimary(ElemeEnum.ELEME_COOKIE_PRIMARY.getValue());
-        } else {
-            cookieDO.setIsPrimary(ElemeEnum.ELEME_COOKIE_SECONDARY.getValue());
-        }
+        cookieDO.setOrigin(origin);
         cookieDO.setStatus(ElemeEnum.ELEME_COOKIE_STATUS_ENABLED.getValue());
 
         return cookieMapper.insert(cookieDO);
@@ -61,41 +57,31 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
 
     private static final String ELEME_COUPON_URL = "https://h5.ele.me/restapi/marketing/promotion/weixin/%s";
 
-    private static final int ELEME_COUPON_CAPACITY = 15;
-
     @Override
-    public ElemeCouponResponseVO getElemeLuckyCoupon(
-            BigInteger userId, String mobileNumber, String couponUrl) throws IOException {
+    public ElemeCouponResponseVO getElemeLuckyCoupon(String mobileNumber, String couponUrl) throws IOException {
         String decodedCouponUrl = URLDecoder.decode(HtmlUtils.htmlUnescape(couponUrl), "UTF-8").trim();
         logger.info("ElemeCouponServiceImpl.getElemeLuckyCoupon.decodedCouponUrl -> {}", decodedCouponUrl);
 
         Map<String, String> refParams = HttpUtil.getRefParams(decodedCouponUrl);
-        logger.info("ElemeCouponServiceImpl.getElemeLuckyCoupon.refParams -> {}", Jackson.toJson(refParams));
-
         ElemeAnchor anchor = Jackson.convert(refParams, ElemeAnchor.class);
-        logger.info("ElemeCouponServiceImpl.getElemeLuckyCoupon.anchor -> {}", Jackson.toJson(anchor));
-
-        return getElemeLuckyCoupon(userId, mobileNumber, anchor.getSn(), Integer.valueOf(anchor.getLuckyNumber()));
-    }
-
-    private ElemeCouponResponseVO getElemeLuckyCoupon(BigInteger userId, String mobileNumber, String sn, int luckyNumber) throws IOException {
-        ElemeCookieDO primaryCookie = getUserPrimaryCookie(userId);
-        if (primaryCookie == null) {
-            return new ElemeCouponResponseVO().setIsSuccess(false).
-                    setTips(HttpElemeMessage.PRIMARY_COOKIE_NOT_FOUND.getMessage());
+        if (anchor == null || StringUtils.isAnyBlank(anchor.getSn(), anchor.getLuckyNumber())) {
+            return new ElemeCouponResponseVO().setIsSuccess(false).setTips(HttpElemeMessage.INVALID_URL.getMessage());
         }
 
-        return recursiveProcessElemeCoupon(primaryCookie, mobileNumber, sn, luckyNumber);
+        return getElemeLuckyCoupon(mobileNumber, anchor.getSn(), Integer.valueOf(anchor.getLuckyNumber()));
     }
 
-    private ElemeCouponResponseVO recursiveProcessElemeCoupon(ElemeCookieDO primaryCookie, String mobileNumber, String sn, int luckyNumber) throws IOException {
-        int capacity = calculateCookieCapacity(luckyNumber);
-        List<ElemeCookieDO> secondaryCookies = cookieMapper.getSecondaryElemeCookie(primaryCookie.getId(), capacity);
-        if (secondaryCookies == null || secondaryCookies.size() < luckyNumber - 1) {
-            return new ElemeCouponResponseVO().setIsSuccess(false).setTips(HttpElemeMessage.COOKIE_NOT_ENOUGH.getMessage());
+    private ElemeCouponResponseVO getElemeLuckyCoupon(String mobileNumber, String sn, int luckyNumber) throws IOException {
+        ElemeCouponResponseVO responseVO = new ElemeCouponResponseVO().setIsSuccess(false);
+
+        List<ElemeCookieDO> availableCookies = cookieMapper.getAvailableElemeCookie(luckyNumber);
+        if (availableCookies == null || availableCookies.size() < luckyNumber - 1) {
+            return responseVO.setTips(HttpElemeMessage.COOKIE_NOT_ENOUGH.getMessage());
         }
 
-        for (ElemeCookieDO cookieDO : secondaryCookies) {
+        ElemeCookieDO targetCookie = availableCookies.remove(0);
+
+        for (ElemeCookieDO cookieDO : availableCookies) {
             ElemeCouponRequest couponRequest = new ElemeCouponRequest();
             couponRequest.setGroupSn(sn);
             couponRequest.setSign(cookieDO.getElemeKey());
@@ -105,90 +91,96 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
             String result = OkHttpUtil.post(String.format(ELEME_COUPON_URL, cookieDO.getOpenid()), Jackson.toJson(couponRequest), OkHttpMediaType.TEXT);
             ElemeCouponResponse couponResponse = Jackson.fromJson(result, ElemeCouponResponse.class);
 
+            if (couponResponse.getLuckyStatus() == 3) {
+                return responseVO.setTips(HttpElemeMessage.LUCKY_COUPON_GONE.getMessage());
+            }
+
             int retCode = couponResponse.getRetCode();
-            List<ElemeCouponResponse.PromotionRecord> promotionRecords = couponResponse.getPromotionRecords();
-            if (retCode == 5) {
-                continue;
-            }
-            if (promotionRecords != null && promotionRecords.size() == ELEME_COUPON_CAPACITY) {
-                if (cookieDO.getNickname().equals(promotionRecords.get(promotionRecords.size() - 1).getSnsUsername())) {
-                    addElemeCookieRecord(cookieDO.getId(), false);
-                }
-                return new ElemeCouponResponseVO().setIsSuccess(false).setTips(HttpElemeMessage.NO_EXCESS_COUPON.getMessage());
-            } else if (promotionRecords != null && promotionRecords.size() >= luckyNumber) {
-                isCookieRecord(cookieDO, promotionRecords);
-                return new ElemeCouponResponseVO().setIsSuccess(false).setTips(HttpElemeMessage.LUCKY_COUPON_GONE.getMessage());
+            if (retCode == 1) {
+                return responseVO.setTips(HttpElemeMessage.NO_EXCESS_COUPON.getMessage());
+            } else if (retCode == 6) {
+                return responseVO.setTips(HttpElemeMessage.COUPON_CANCELED.getMessage());
             } else {
-                isCookieRecord(cookieDO, promotionRecords);
-                if (promotionRecords != null && promotionRecords.size() == luckyNumber - 1) {
-                    return getTheLuckyCoupon(primaryCookie, mobileNumber, sn, luckyNumber);
+                if (retCode == 4) {
+                    List<ElemeCouponResponse.PromotionRecord> promotionRecords = couponResponse.getPromotionRecords();
+                    BigDecimal amount = promotionRecords.get(luckyNumber - 1).getAmount();
+                    if (!addElemeCookieRecord(cookieDO.getId(), couponResponse.getAccount(), amount, false)) {
+                        return responseVO.setTips(HttpElemeMessage.RECORD_EXCEPTION.getMessage());
+                    }
+                } else if (retCode == 2) {
+                    return responseVO.setTips(HttpElemeMessage.EXTRA_OPERATED.getMessage());
                 }
             }
         }
 
-        return recursiveProcessElemeCoupon(primaryCookie, mobileNumber, sn, luckyNumber);
+        if (StringUtils.isBlank(mobileNumber)) {
+            return responseVO.setIsSuccess(true).setTips(HttpElemeMessage.NEXT_LUCKY.getMessage());
+        }
+
+        return getTheLuckyCoupon(targetCookie, mobileNumber, sn, luckyNumber);
     }
 
-    private void isCookieRecord(ElemeCookieDO cookieDO, List<ElemeCouponResponse.PromotionRecord> promotionRecords) {
-        boolean isRequested = false;
-        for (ElemeCouponResponse.PromotionRecord promotionRecord : promotionRecords) {
-            if (promotionRecord.getSnsUsername().equals(cookieDO.getNickname())) {
-                isRequested = true;
-            }
+    private ElemeCouponResponseVO getTheLuckyCoupon(ElemeCookieDO targetCookie, String mobileNumber, String sn, int luckyNumber) throws IOException {
+        ElemeCouponResponseVO responseVO = new ElemeCouponResponseVO().setIsSuccess(false);
+        if (!bindAccountToMobileNumber(targetCookie.getOpenid(), targetCookie.getElemeKey(), mobileNumber)) {
+            return responseVO.setTips(HttpElemeMessage.BIND_EXCEPTION.getMessage());
         }
-        if (!isRequested) {
-            addElemeCookieRecord(cookieDO.getId(), false);
-        }
-    }
 
-    private ElemeCouponResponseVO getTheLuckyCoupon(ElemeCookieDO primaryCookie, String mobileNumber, String sn, int luckyNumber) throws IOException {
         ElemeCouponRequest couponRequest = new ElemeCouponRequest();
         couponRequest.setGroupSn(sn);
-        couponRequest.setSign(primaryCookie.getElemeKey());
-        couponRequest.setWeixinAvatar(primaryCookie.getAvatar());
-        couponRequest.setWeixinUsername(primaryCookie.getNickname());
+        couponRequest.setSign(targetCookie.getElemeKey());
+        couponRequest.setWeixinAvatar(targetCookie.getAvatar());
+        couponRequest.setWeixinUsername(targetCookie.getNickname());
 
-        String result = OkHttpUtil.post(String.format(ELEME_COUPON_URL, primaryCookie.getOpenid()), Jackson.toJson(couponRequest), OkHttpMediaType.TEXT);
+        String result = OkHttpUtil.post(String.format(ELEME_COUPON_URL, targetCookie.getOpenid()), Jackson.toJson(couponRequest), OkHttpMediaType.TEXT);
         ElemeCouponResponse couponResponse = Jackson.fromJson(result, ElemeCouponResponse.class);
+        List<ElemeCouponResponse.PromotionRecord> promotionRecords = couponResponse.getPromotionRecords();
+        BigDecimal amount = promotionRecords.get(luckyNumber - 1).getAmount();
 
-        if (couponResponse.getRetCode() == 5) {
-            return new ElemeCouponResponseVO().setIsSuccess(false).setTips(HttpElemeMessage.NO_MORE_CHANCE.getMessage());
-        } else if (couponResponse.getPromotionRecords() != null && couponResponse.getPromotionRecords().size() == luckyNumber) {
-            addElemeCookieRecord(primaryCookie.getId(), true);
-            return new ElemeCouponResponseVO().setIsSuccess(true)
+        if (couponResponse.getIsLucky()) {
+            addElemeCookieRecord(targetCookie.getId(), couponResponse.getAccount(), amount, true);
+            return responseVO.setIsSuccess(true)
                     .setTips(HttpElemeMessage.LUCKY_MAN.getMessage())
                     .setAmount(new BigDecimal(couponResponse.getAccount()))
                     .setMobileNumber(mobileNumber)
-                    .setNickname(primaryCookie.getNickname());
+                    .setNickname(targetCookie.getNickname());
         } else {
-            addElemeCookieRecord(primaryCookie.getId(), false);
-            return new ElemeCouponResponseVO().setIsSuccess(false).setTips(HttpElemeMessage.CHANCE_SLIPPED.getMessage());
+            int retCode = couponResponse.getRetCode();
+            if (retCode == 5) {
+                return responseVO.setTips(HttpElemeMessage.NO_MORE_CHANCE.getMessage());
+            } else if (retCode == 2) {
+                return responseVO.setTips(HttpElemeMessage.COUPON_RECEIVED.getMessage());
+            } else if (retCode == 1) {
+                return responseVO.setTips(HttpElemeMessage.NO_EXCESS_COUPON.getMessage());
+            } else {
+                addElemeCookieRecord(targetCookie.getId(), couponResponse.getAccount(), amount, false);
+                return responseVO.setTips(HttpElemeMessage.CHANCE_SLIPPED.getMessage());
+            }
         }
     }
 
-    private void addElemeCookieRecord(BigInteger cookieId, boolean isLucky) {
+    private static final String ELEME_BIND_URL = "https://h5.ele.me/restapi//v1/weixin/%s/phone";
+
+    private boolean bindAccountToMobileNumber(String openid, String sign, String mobileNumber) throws IOException {
+        ElemeBindRequest bindRequest = new ElemeBindRequest();
+        bindRequest.setSign(sign);
+        bindRequest.setPhone(mobileNumber);
+
+        return "".equals(OkHttpUtil.put(String.format(ELEME_BIND_URL, openid), Jackson.toJson(bindRequest), OkHttpMediaType.TEXT));
+    }
+
+    private boolean addElemeCookieRecord(BigInteger cookieId, String account, BigDecimal amount, boolean isLucky) {
         ElemeCookieRecordDO recordDO = new ElemeCookieRecordDO();
         recordDO.setCookieId(cookieId);
+        recordDO.setAccount(account);
+        recordDO.setAmount(amount);
         if (isLucky) {
             recordDO.setIsLucky(ElemeEnum.ELEME_LUCKY_MAN.getValue());
         } else {
             recordDO.setIsLucky(ElemeEnum.ELEME_POOR_MAN.getValue());
         }
 
-        cookieRecordMapper.insert(recordDO);
-    }
-
-    private int calculateCookieCapacity(int number) {
-        return (int) (number + number * 0.75);
-    }
-
-    private ElemeCookieDO getUserPrimaryCookie(BigInteger userId) {
-        ElemeCookieDO query = new ElemeCookieDO();
-        query.setUserId(userId);
-        query.setIsPrimary(ElemeEnum.ELEME_COOKIE_PRIMARY.getValue());
-        query.setStatus(ElemeEnum.ELEME_COOKIE_STATUS_ENABLED.getValue());
-
-        return cookieMapper.get(query);
+        return cookieRecordMapper.insert(recordDO) == 1;
     }
 
 }

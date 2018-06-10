@@ -19,7 +19,7 @@
             `province`,
             `sex`,
             `unionid`,
-            `is_primary`,
+            `origin`,
             `status`
         ) values (
             #{userId},
@@ -36,7 +36,7 @@
             #{province},
             #{sex},
             #{unionid},
-            #{isPrimary},
+            #{origin},
             #{status}
         )
     </insert>
@@ -50,9 +50,6 @@
             <if test="userId != null">
                 and user_id = #{userId}
             </if>
-            <if test="isPrimary != null">
-                and is_primary = #{isPrimary}
-            </if>
             <if test="status != null">
                 and status = #{status}
             </if>
@@ -65,18 +62,15 @@
         </where>
     </select>
 
-    <select id="getSecondaryElemeCookie" resultType="ElemeCookieDO" parameterType="_int">
+    <select id="getAvailableElemeCookie" resultType="ElemeCookieDO" parameterType="_int">
         select * from eleme_cookie
         where id not in (
-            select cookie_id from eleme_cookie_record where use_date = curdate() group by cookie_id having count(*)>=5
-        ) and id not in(
             select cookie_id from eleme_cookie_record
-            where use_date = curdate() and cookie_id in (
-                select id from eleme_cookie where is_primary=1 and status=1
-            )
-            group by cookie_id having count(*)>=2
-        ) and id != #{primaryCookieId, javaType=BigInteger, jdbcType=BIGINT}
-        and status=1
+            where use_date = curdate()
+            group by cookie_id
+            having count(*) >= 5
+        )
+        and status = 1
         limit #{capacity}
     </select>
 </mapper>

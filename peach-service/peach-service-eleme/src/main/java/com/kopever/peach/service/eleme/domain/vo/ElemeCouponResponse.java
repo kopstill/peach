@@ -3,6 +3,7 @@ package com.kopever.peach.service.eleme.domain.vo;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -19,7 +20,7 @@ public class ElemeCouponResponse {
     @Setter
     public static class PromotionItem {
 
-        private Double amount;
+        private BigDecimal amount;
         private String expireDate;
         private String[] hongbaoVariety;
         private Integer itemNum;
@@ -38,7 +39,7 @@ public class ElemeCouponResponse {
     @Setter
     public static class PromotionRecord {
 
-        private Double amount;
+        private BigDecimal amount;
         private Integer createdAt;
         private Boolean isLucky;
         private String snsAvatar;

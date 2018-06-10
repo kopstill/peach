@@ -5,13 +5,17 @@
 <mapper namespace="com.kopever.peach.service.eleme.dao.ElemeCookieRecordMapper">
     <insert id="insert" parameterType="ElemeCookieRecordDO">
         insert into `peach`.`eleme_cookie_record` (
-          `cookie_id`,
-          `use_date`,
-          `is_lucky`
+            `cookie_id`,
+            `use_date`,
+            `account`,
+            `amount`,
+            `is_lucky`
         ) values (
-          #{cookieId},
-          curdate(),
-          #{isLucky}
+            #{cookieId},
+            curdate(),
+            #{account},
+            #{amount},
+            #{isLucky}
         )
     </insert>
 </mapper>

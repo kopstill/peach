@@ -19,6 +19,7 @@ public enum HttpElemeMessage {
     RECORD_EXCEPTION(10612, "领取记录添加异常"),
     NEXT_LUCKY(10613, "下一个就是最大红包"),
     BIND_EXCEPTION(10614, "手机号绑定失败"),
+    UNKNOWN_RETCODE(10615, "领取失败，状态未知"),
     ;
 
     HttpElemeMessage(int code, String message) {

@@ -42,6 +42,14 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
     }
 
     @Override
+    public ElemeCookieDO getElemeCouponCookieByOpenid(String openid) {
+        ElemeCookieDO cookieDO = new ElemeCookieDO();
+        cookieDO.setOpenid(openid);
+
+        return cookieMapper.get(cookieDO);
+    }
+
+    @Override
     public int saveElemeCouponCookie(String origin, ElemeCookieVO cookieVO, BigInteger userId) {
         String privilege = StringUtils.join(cookieVO.getPrivilege(), ',').intern();
         cookieVO.setPrivilege(null);
@@ -54,6 +62,7 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
 
         return cookieMapper.insert(cookieDO);
     }
+
 
     private static final String ELEME_COUPON_URL = "https://h5.ele.me/restapi/marketing/promotion/weixin/%s";
 
@@ -99,7 +108,7 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
             BigInteger cookieId = cookieDO.getId();
             if (couponResponse.getLuckyStatus() == 3) {
                 if (retCode == 3 || retCode == 4) {
-                    if (addElemeCookieRecord(cookieId, account, amount, couponResponse.getIsLucky())) {
+                    if (addElemeCookieRecord(cookieId, account, amount, sn, couponResponse.getIsLucky())) {
                         return responseVO.setTips(HttpElemeMessage.RECORD_EXCEPTION.getMessage());
                     }
                 }
@@ -111,7 +120,7 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
             } else if (retCode == 2) {
                 return responseVO.setTips(HttpElemeMessage.EXTRA_OPERATED.getMessage());
             } else if (retCode == 3 || retCode == 4) {
-                if (addElemeCookieRecord(cookieId, account, amount, false)) {
+                if (addElemeCookieRecord(cookieId, account, amount, sn, false)) {
                     return responseVO.setTips(HttpElemeMessage.RECORD_EXCEPTION.getMessage());
                 }
             } else if (retCode == 5) {
@@ -163,7 +172,7 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
         int retCode = couponResponse.getRetCode();
         if (couponResponse.getIsLucky()) {
             if (retCode == 3 || retCode == 4) {
-                if (addElemeCookieRecord(cookieId, account, amount, true)) {
+                if (addElemeCookieRecord(cookieId, account, amount, sn, true)) {
                     return responseVO.setTips(HttpElemeMessage.RECORD_EXCEPTION.getMessage());
                 }
             }
@@ -178,7 +187,7 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
             } else if (retCode == 2) {
                 return responseVO.setTips(HttpElemeMessage.COUPON_RECEIVED.getMessage());
             } else if (retCode == 3 || retCode == 4) {
-                if (addElemeCookieRecord(cookieId, account, amount, false)) {
+                if (addElemeCookieRecord(cookieId, account, amount, sn, false)) {
                     return responseVO.setTips(HttpElemeMessage.RECORD_EXCEPTION.getMessage());
                 }
                 return responseVO.setTips(HttpElemeMessage.CHANCE_SLIPPED.getMessage());
@@ -208,11 +217,12 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
         return !"".equals(result);
     }
 
-    private boolean addElemeCookieRecord(BigInteger cookieId, String account, BigDecimal amount, boolean isLucky) {
+    private boolean addElemeCookieRecord(BigInteger cookieId, String account, BigDecimal amount, String serialNumber, boolean isLucky) {
         ElemeCookieRecordDO recordDO = new ElemeCookieRecordDO();
         recordDO.setCookieId(cookieId);
         recordDO.setAccount(account);
         recordDO.setAmount(amount);
+        recordDO.setSerialNumber(serialNumber);
         if (isLucky) {
             recordDO.setIsLucky(ElemeEnum.ELEME_LUCKY_MAN.getValue());
         } else {

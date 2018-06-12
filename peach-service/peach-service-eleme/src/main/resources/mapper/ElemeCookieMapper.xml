@@ -50,6 +50,9 @@
             <if test="userId != null">
                 and user_id = #{userId}
             </if>
+            <if test="openid != null">
+                and openid = #{openid}
+            </if>
             <if test="status != null">
                 and status = #{status}
             </if>

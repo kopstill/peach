@@ -16,6 +16,7 @@ public class ElemeCookieRecordDO extends BaseDO {
     private Date useDate;
     private String account;
     private BigDecimal amount;
+    private String serialNumber;
     private Integer isLucky;
 
 }

@@ -9,12 +9,14 @@
             `use_date`,
             `account`,
             `amount`,
+            `serial_number`,
             `is_lucky`
         ) values (
             #{cookieId},
             curdate(),
             #{account},
             #{amount},
+            #{serialNumber},
             #{isLucky}
         )
     </insert>

@@ -2,7 +2,7 @@ package com.kopever.peach.service.eleme.client;
 
 import com.kopever.peach.service.framework.domain.HttpMessage;
 import com.kopever.peach.service.framework.domain.HttpResponse;
-import com.kopever.peach.service.user.domain.vo.PeachUserVO;
+import com.kopever.peach.domain.user.vo.PeachUserVO;
 import feign.Logger;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;

@@ -12,7 +12,7 @@ import com.kopever.peach.service.eleme.util.ElemeCookieUtil;
 import com.kopever.peach.service.framework.domain.HttpMessage;
 import com.kopever.peach.service.framework.domain.HttpResponse;
 import com.kopever.peach.service.framework.util.ResponseUtil;
-import com.kopever.peach.service.user.domain.vo.PeachUserVO;
+import com.kopever.peach.domain.user.vo.PeachUserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;

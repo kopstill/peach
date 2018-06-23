@@ -4,7 +4,7 @@ import com.kopever.peach.common.Dozer;
 import com.kopever.peach.service.framework.domain.HttpResponse;
 import com.kopever.peach.service.user.domain.HttpUserMessage;
 import com.kopever.peach.service.user.domain.data.PeachUserDO;
-import com.kopever.peach.service.user.domain.vo.PeachUserVO;
+import com.kopever.peach.domain.user.vo.PeachUserVO;
 import com.kopever.peach.service.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

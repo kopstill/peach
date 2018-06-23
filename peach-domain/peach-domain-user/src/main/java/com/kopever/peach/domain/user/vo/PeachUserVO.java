@@ -1,4 +1,4 @@
-package com.kopever.peach.service.user.domain.vo;
+package com.kopever.peach.domain.user.vo;
 
 import lombok.Getter;
 import lombok.Setter;

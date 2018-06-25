@@ -20,5 +20,9 @@
             <groupId>com.kopever.peach</groupId>
             <artifactId>peach-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.kopever.peach</groupId>
+            <artifactId>peach-domain-common</artifactId>
+        </dependency>
     </dependencies>
 </project>

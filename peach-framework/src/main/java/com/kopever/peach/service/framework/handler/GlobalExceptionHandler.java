@@ -1,8 +1,8 @@
 package com.kopever.peach.service.framework.handler;
 
 import com.kopever.peach.common.util.HttpUtil;
-import com.kopever.peach.service.framework.domain.HttpMessage;
-import com.kopever.peach.service.framework.domain.HttpResponse;
+import com.kopever.peach.domain.HttpMessage;
+import com.kopever.peach.domain.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;

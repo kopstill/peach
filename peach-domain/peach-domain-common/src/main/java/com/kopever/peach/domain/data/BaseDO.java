@@ -1,4 +1,4 @@
-package com.kopever.peach.service.framework.domain.data;
+package com.kopever.peach.domain.data;
 
 import lombok.Getter;
 import lombok.Setter;

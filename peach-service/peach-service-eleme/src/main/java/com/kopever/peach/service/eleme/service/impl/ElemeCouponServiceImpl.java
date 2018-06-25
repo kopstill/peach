@@ -7,7 +7,7 @@ import com.kopever.peach.common.util.OkHttpMediaType;
 import com.kopever.peach.common.util.OkHttpUtil;
 import com.kopever.peach.service.eleme.dao.ElemeCookieMapper;
 import com.kopever.peach.service.eleme.dao.ElemeCookieRecordMapper;
-import com.kopever.peach.service.eleme.domain.HttpElemeMessage;
+import com.kopever.peach.service.eleme.domain.ElemeHttpMessage;
 import com.kopever.peach.service.eleme.domain.data.ElemeCookieDO;
 import com.kopever.peach.service.eleme.domain.data.ElemeCookieRecordDO;
 import com.kopever.peach.service.eleme.domain.data.ElemeEnum;
@@ -74,7 +74,7 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
         Map<String, String> refParams = HttpUtil.getRefParams(decodedCouponUrl);
         ElemeAnchor anchor = Jackson.convert(refParams, ElemeAnchor.class);
         if (anchor == null || StringUtils.isAnyBlank(anchor.getSn(), anchor.getLuckyNumber())) {
-            return new ElemeCouponResponseVO().setIsSuccess(false).setTips(HttpElemeMessage.INVALID_URL.getMessage());
+            return new ElemeCouponResponseVO().setIsSuccess(false).setTips(ElemeHttpMessage.INVALID_URL.getMessage());
         }
 
         return getElemeLuckyCoupon(mobileNumber, anchor.getSn(), Integer.valueOf(anchor.getLuckyNumber()));
@@ -86,7 +86,7 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
         int leastSize = StringUtils.isEmpty(mobileNumber) ? luckyNumber - 1 : luckyNumber;
         List<ElemeCookieDO> availableCookies = cookieMapper.getAvailableElemeCookie(leastSize);
         if (availableCookies == null || availableCookies.size() < leastSize) {
-            return responseVO.setTips(HttpElemeMessage.COOKIE_NOT_ENOUGH.getMessage());
+            return responseVO.setTips(ElemeHttpMessage.COOKIE_NOT_ENOUGH.getMessage());
         }
 
         for (ElemeCookieDO cookieDO : availableCookies) {
@@ -109,26 +109,26 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
             if (couponResponse.getLuckyStatus() == 3) {
                 if (retCode == 3 || retCode == 4) {
                     if (addElemeCookieRecord(cookieId, account, amount, sn, couponResponse.getIsLucky())) {
-                        return responseVO.setTips(HttpElemeMessage.RECORD_EXCEPTION.getMessage());
+                        return responseVO.setTips(ElemeHttpMessage.RECORD_EXCEPTION.getMessage());
                     }
                 }
-                return responseVO.setTips(HttpElemeMessage.LUCKY_COUPON_GONE.getMessage());
+                return responseVO.setTips(ElemeHttpMessage.LUCKY_COUPON_GONE.getMessage());
             }
 
             if (retCode == 1) {
-                return responseVO.setTips(HttpElemeMessage.NO_EXCESS_COUPON.getMessage());
+                return responseVO.setTips(ElemeHttpMessage.NO_EXCESS_COUPON.getMessage());
             } else if (retCode == 2) {
-                return responseVO.setTips(HttpElemeMessage.EXTRA_OPERATED.getMessage());
+                return responseVO.setTips(ElemeHttpMessage.EXTRA_OPERATED.getMessage());
             } else if (retCode == 3 || retCode == 4) {
                 if (addElemeCookieRecord(cookieId, account, amount, sn, false)) {
-                    return responseVO.setTips(HttpElemeMessage.RECORD_EXCEPTION.getMessage());
+                    return responseVO.setTips(ElemeHttpMessage.RECORD_EXCEPTION.getMessage());
                 }
             } else if (retCode == 5) {
-                return responseVO.setTips(HttpElemeMessage.EXTRA_OPERATED.getMessage());
+                return responseVO.setTips(ElemeHttpMessage.EXTRA_OPERATED.getMessage());
             } else if (retCode == 6) {
-                return responseVO.setTips(HttpElemeMessage.COUPON_CANCELED.getMessage());
+                return responseVO.setTips(ElemeHttpMessage.COUPON_CANCELED.getMessage());
             } else {
-                return responseVO.setTips(HttpElemeMessage.UNKNOWN_RETCODE.getMessage());
+                return responseVO.setTips(ElemeHttpMessage.UNKNOWN_RETCODE.getMessage());
             }
 
             if (currentSize == luckyNumber - 1) {
@@ -137,7 +137,7 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
         }
 
         if (StringUtils.isBlank(mobileNumber)) {
-            return responseVO.setIsSuccess(true).setTips(HttpElemeMessage.NEXT_LUCKY.getMessage());
+            return responseVO.setIsSuccess(true).setTips(ElemeHttpMessage.NEXT_LUCKY.getMessage());
         }
 
         return getTheLuckyCoupon(availableCookies.get(luckyNumber - 1), mobileNumber, sn);
@@ -146,7 +146,7 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
     private ElemeCouponResponseVO getTheLuckyCoupon(ElemeCookieDO targetCookie, String mobileNumber, String sn) throws IOException {
         ElemeCouponResponseVO responseVO = new ElemeCouponResponseVO().setIsSuccess(false);
         if (bindAccountToMobileNumber(targetCookie.getOpenid(), targetCookie.getElemeKey(), mobileNumber)) {
-            return responseVO.setTips(HttpElemeMessage.BIND_EXCEPTION.getMessage());
+            return responseVO.setTips(ElemeHttpMessage.BIND_EXCEPTION.getMessage());
         }
 
         ElemeCouponRequest couponRequest = new ElemeCouponRequest();
@@ -173,28 +173,28 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
         if (couponResponse.getIsLucky()) {
             if (retCode == 3 || retCode == 4) {
                 if (addElemeCookieRecord(cookieId, account, amount, sn, true)) {
-                    return responseVO.setTips(HttpElemeMessage.RECORD_EXCEPTION.getMessage());
+                    return responseVO.setTips(ElemeHttpMessage.RECORD_EXCEPTION.getMessage());
                 }
             }
             return responseVO.setIsSuccess(true)
-                    .setTips(HttpElemeMessage.LUCKY_MAN.getMessage())
+                    .setTips(ElemeHttpMessage.LUCKY_MAN.getMessage())
                     .setAmount(new BigDecimal(account))
                     .setMobileNumber(mobileNumber)
                     .setNickname(targetCookie.getNickname());
         } else {
             if (retCode == 1) {
-                return responseVO.setTips(HttpElemeMessage.NO_EXCESS_COUPON.getMessage());
+                return responseVO.setTips(ElemeHttpMessage.NO_EXCESS_COUPON.getMessage());
             } else if (retCode == 2) {
-                return responseVO.setTips(HttpElemeMessage.COUPON_RECEIVED.getMessage());
+                return responseVO.setTips(ElemeHttpMessage.COUPON_RECEIVED.getMessage());
             } else if (retCode == 3 || retCode == 4) {
                 if (addElemeCookieRecord(cookieId, account, amount, sn, false)) {
-                    return responseVO.setTips(HttpElemeMessage.RECORD_EXCEPTION.getMessage());
+                    return responseVO.setTips(ElemeHttpMessage.RECORD_EXCEPTION.getMessage());
                 }
-                return responseVO.setTips(HttpElemeMessage.CHANCE_SLIPPED.getMessage());
+                return responseVO.setTips(ElemeHttpMessage.CHANCE_SLIPPED.getMessage());
             } else if (retCode == 5) {
-                return responseVO.setTips(HttpElemeMessage.NO_MORE_CHANCE.getMessage());
+                return responseVO.setTips(ElemeHttpMessage.NO_MORE_CHANCE.getMessage());
             } else {
-                return responseVO.setTips(HttpElemeMessage.UNKNOWN_RETCODE.getMessage());
+                return responseVO.setTips(ElemeHttpMessage.UNKNOWN_RETCODE.getMessage());
             }
         }
     }

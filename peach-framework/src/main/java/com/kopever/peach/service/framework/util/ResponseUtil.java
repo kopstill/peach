@@ -1,7 +1,7 @@
 package com.kopever.peach.service.framework.util;
 
-import com.kopever.peach.service.framework.domain.HttpMessage;
-import com.kopever.peach.service.framework.domain.HttpResponse;
+import com.kopever.peach.domain.HttpMessage;
+import com.kopever.peach.domain.HttpResponse;
 import com.kopever.peach.service.framework.exception.HttpResponseFailedException;
 import com.kopever.peach.service.framework.exception.HttpResponseNullException;
 

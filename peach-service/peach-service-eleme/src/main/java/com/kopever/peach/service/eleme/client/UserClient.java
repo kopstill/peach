@@ -1,8 +1,8 @@
 package com.kopever.peach.service.eleme.client;
 
-import com.kopever.peach.service.framework.domain.HttpMessage;
-import com.kopever.peach.service.framework.domain.HttpResponse;
-import com.kopever.peach.domain.user.vo.PeachUserVO;
+import com.kopever.peach.domain.HttpMessage;
+import com.kopever.peach.domain.HttpResponse;
+import com.kopever.peach.domain.user.vo.UserVO;
 import feign.Logger;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface UserClient {
 
     @GetMapping("/{username}")
-    HttpResponse<PeachUserVO> getUserByUsername(@PathVariable("username") String username);
+    HttpResponse<UserVO> getUserByUsername(@PathVariable("username") String username);
 
 }
 

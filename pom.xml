@@ -103,13 +103,13 @@
             </dependency>
             <dependency>
                 <groupId>com.kopever.peach</groupId>
-                <artifactId>peach-domain-user</artifactId>
+                <artifactId>peach-domain-common</artifactId>
                 <version>${peach-internal.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
+                <groupId>com.kopever.peach</groupId>
+                <artifactId>peach-domain-user</artifactId>
+                <version>${peach-internal.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
@@ -142,8 +142,19 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

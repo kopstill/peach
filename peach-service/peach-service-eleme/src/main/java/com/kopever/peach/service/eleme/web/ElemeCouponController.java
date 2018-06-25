@@ -1,18 +1,18 @@
 package com.kopever.peach.service.eleme.web;
 
 import com.kopever.peach.common.Jackson;
+import com.kopever.peach.domain.HttpMessage;
+import com.kopever.peach.domain.HttpResponse;
+import com.kopever.peach.domain.user.vo.UserVO;
 import com.kopever.peach.service.eleme.client.UserClient;
-import com.kopever.peach.service.eleme.domain.HttpElemeMessage;
+import com.kopever.peach.service.eleme.domain.ElemeHttpMessage;
 import com.kopever.peach.service.eleme.domain.data.ElemeCookieDO;
 import com.kopever.peach.service.eleme.domain.vo.ElemeCookieVO;
 import com.kopever.peach.service.eleme.domain.vo.ElemeCouponRequestVO;
 import com.kopever.peach.service.eleme.domain.vo.ElemeCouponResponseVO;
 import com.kopever.peach.service.eleme.service.ElemeCouponService;
 import com.kopever.peach.service.eleme.util.ElemeCookieUtil;
-import com.kopever.peach.service.framework.domain.HttpMessage;
-import com.kopever.peach.service.framework.domain.HttpResponse;
 import com.kopever.peach.service.framework.util.ResponseUtil;
-import com.kopever.peach.domain.user.vo.PeachUserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,7 +48,7 @@ public class ElemeCouponController {
                 ElemeCookieDO cookieDO = couponService.getElemeCouponCookieByOpenid(cookieVO.getOpenid());
                 if (cookieDO != null) {
                     return new HttpResponse(
-                            HttpElemeMessage.COOKIE_EXISTED.getCode(), HttpElemeMessage.COOKIE_EXISTED.getMessage());
+                            ElemeHttpMessage.COOKIE_EXISTED.getCode(), ElemeHttpMessage.COOKIE_EXISTED.getMessage());
                 }
 
                 int result = couponService.saveElemeCouponCookie(cookie, cookieVO, userId);
@@ -60,7 +60,7 @@ public class ElemeCouponController {
             }
 
             return new HttpResponse(
-                    HttpElemeMessage.DEVOTE_COOKIE_FAILED.getCode(), HttpElemeMessage.DEVOTE_COOKIE_FAILED.getMessage());
+                    ElemeHttpMessage.DEVOTE_COOKIE_FAILED.getCode(), ElemeHttpMessage.DEVOTE_COOKIE_FAILED.getMessage());
         } catch (Exception e) {
             logger.error("CouponController.devoteCookie.Exception", e);
             return new HttpResponse(HttpMessage.EXCEPTION);
@@ -69,12 +69,12 @@ public class ElemeCouponController {
 
     @PostMapping("/coupon/lucky")
     public HttpResponse getLuckyCoupon(@Valid ElemeCouponRequestVO requestVO) {
-        HttpResponse<PeachUserVO> userResponse = userClient.getUserByUsername(requestVO.getUsername());
+        HttpResponse<UserVO> userResponse = userClient.getUserByUsername(requestVO.getUsername());
         logger.info("CouponController.getLuckyCoupon.userResponse -> {}", Jackson.toJson(userResponse));
 
         try {
             if (ResponseUtil.isSuccess(userResponse)) {
-                PeachUserVO userVO = ResponseUtil.getResult(userResponse);
+                UserVO userVO = ResponseUtil.getResult(userResponse);
 
                 if (userVO.getSecretKey().equals(requestVO.getSecretKey())) {
                     ElemeCouponResponseVO responseVO =
@@ -87,8 +87,8 @@ public class ElemeCouponController {
                     return new HttpResponse<>().setResult(responseVO);
                 } else {
                     return new HttpResponse().setCodeMessage(
-                            HttpElemeMessage.INVALID_SECRET_KEY.getCode(),
-                            HttpElemeMessage.INVALID_SECRET_KEY.getMessage());
+                            ElemeHttpMessage.INVALID_SECRET_KEY.getCode(),
+                            ElemeHttpMessage.INVALID_SECRET_KEY.getMessage());
                 }
             }
 

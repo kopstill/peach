@@ -1,6 +1,6 @@
 package com.kopever.peach.service.eleme.domain.data;
 
-import com.kopever.peach.service.framework.domain.data.BaseDO;
+import com.kopever.peach.domain.data.BaseDO;
 import lombok.Getter;
 import lombok.Setter;
 

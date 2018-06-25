@@ -2,7 +2,7 @@ package com.kopever.peach.service.eleme.domain;
 
 import lombok.Getter;
 
-public enum HttpElemeMessage {
+public enum ElemeHttpMessage {
 
     DEVOTE_COOKIE_FAILED(10601, "Cookie贡献失败，请检查Cookie格式"),
     COOKIE_EXISTED(10602, "该Cookie已存在，请重新贡献"),
@@ -23,7 +23,7 @@ public enum HttpElemeMessage {
     UNKNOWN_RETCODE(10617, "领取失败，状态未知"),
     ;
 
-    HttpElemeMessage(int code, String message) {
+    ElemeHttpMessage(int code, String message) {
         this.code = code;
         this.message = message;
     }

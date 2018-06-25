@@ -1,10 +1,10 @@
 package com.kopever.peach.service.user.web;
 
 import com.kopever.peach.common.Dozer;
-import com.kopever.peach.service.framework.domain.HttpResponse;
-import com.kopever.peach.service.user.domain.HttpUserMessage;
-import com.kopever.peach.service.user.domain.data.PeachUserDO;
-import com.kopever.peach.domain.user.vo.PeachUserVO;
+import com.kopever.peach.domain.HttpResponse;
+import com.kopever.peach.service.user.domain.UserHttpMessage;
+import com.kopever.peach.service.user.domain.data.UserDO;
+import com.kopever.peach.domain.user.vo.UserVO;
 import com.kopever.peach.service.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,23 +24,23 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public HttpResponse<PeachUserVO> getUserByUsername(@PathVariable("username") String username) {
-        HttpResponse<PeachUserVO> response = new HttpResponse<>();
+    public HttpResponse<UserVO> getUserByUsername(@PathVariable("username") String username) {
+        HttpResponse<UserVO> response = new HttpResponse<>();
 
         try {
-            PeachUserDO userDO = userService.getUserByUsername(username);
+            UserDO userDO = userService.getUserByUsername(username);
             if (userDO != null) {
-                response.setResult(Dozer.map(userDO, PeachUserVO.class));
+                response.setResult(Dozer.map(userDO, UserVO.class));
             } else {
                 response.setCodeMessage(
-                        HttpUserMessage.USER_NOT_EXIST.getCode(),
-                        HttpUserMessage.USER_NOT_EXIST.getMessage());
+                        UserHttpMessage.USER_NOT_EXIST.getCode(),
+                        UserHttpMessage.USER_NOT_EXIST.getMessage());
             }
         } catch (Exception e) {
             logger.error("UserController.getUserByUsername.Exception", e);
             response.setCodeMessage(
-                    HttpUserMessage.GET_USER_EXCEPTION.getCode(),
-                    HttpUserMessage.GET_USER_EXCEPTION.getMessage());
+                    UserHttpMessage.GET_USER_EXCEPTION.getCode(),
+                    UserHttpMessage.GET_USER_EXCEPTION.getMessage());
         }
 
         return response;

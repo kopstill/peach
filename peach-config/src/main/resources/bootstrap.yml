@@ -30,4 +30,4 @@ spring:
     config:
       server:
         native:
-          search-locations: file:E:/workspace/workspace_github/temp
+          search-locations: file:E:/workspace/workspace_github/peach-config

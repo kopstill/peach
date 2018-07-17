@@ -24,8 +24,10 @@ spring:
       password: world
 ---
 spring:
+  profiles:
+    active: native
   cloud:
     config:
       server:
-        git:
-          uri: file:\E:\workspace\workspace_github\peach-config
+        native:
+          search-locations: file:E:/workspace/workspace_github/temp

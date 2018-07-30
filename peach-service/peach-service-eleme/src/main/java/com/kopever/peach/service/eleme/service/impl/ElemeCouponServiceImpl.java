@@ -80,7 +80,7 @@ public class ElemeCouponServiceImpl implements ElemeCouponService {
         return getElemeLuckyCoupon(mobileNumber, anchor.getSn(), Integer.valueOf(anchor.getLuckyNumber()));
     }
 
-    private ElemeCouponResponseVO getElemeLuckyCoupon(String mobileNumber, String sn, int luckyNumber) throws IOException {
+    private ElemeCouponResponseVO getElemeLuckyCoupon(String mobileNumber, String sn, Integer luckyNumber) throws IOException {
         ElemeCouponResponseVO responseVO = new ElemeCouponResponseVO().setIsSuccess(false);
 
         int leastSize = StringUtils.isEmpty(mobileNumber) ? luckyNumber - 1 : luckyNumber;

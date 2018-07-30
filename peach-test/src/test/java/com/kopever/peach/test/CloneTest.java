@@ -2,22 +2,20 @@ package com.kopever.peach.test;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 public class CloneTest {
 
     @Test
     public void testBasicClone() {
         int[] a = {1, 2, 3};
-        int[] b = a;
-        System.out.println(a);
-        System.out.println(b);
-        System.out.println(a == b);
+        System.out.println(Arrays.toString(a));
 
         System.out.println("---");
 
-        int[] c = b.clone();
-        System.out.println(c);
-        System.out.println(a == c);
-        System.out.println(b == c);
+        int[] b = a.clone();
+        System.out.println(Arrays.toString(b));
+        System.out.println(a == b);
     }
 
     @Test
@@ -52,7 +50,7 @@ public class CloneTest {
         }
     }
 
-    private class Father implements Cloneable {
+    private static class Father implements Cloneable {
 
         private String name;
 
@@ -68,7 +66,7 @@ public class CloneTest {
 
     }
 
-    private class Child implements Cloneable {
+    private static class Child implements Cloneable {
 
         private String name;
 
